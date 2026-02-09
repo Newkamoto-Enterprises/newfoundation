@@ -384,86 +384,84 @@ document.addEventListener('DOMContentLoaded', () => {
      ======================================== */
 
   function fitExplorationCards() {
-    // --- Research cards ---
+    // Helper: find best font size for a single card
+    function findBestSize(card, titleEl, descEl, ratio, maxSize) {
+      card.style.overflow = 'visible';
+      const origTitleOp = titleEl.style.opacity;
+      const origDescOp = descEl.style.opacity;
+      titleEl.style.opacity = '1';
+      descEl.style.opacity = '1';
+
+      const maxW = card.clientWidth;
+      const maxH = card.clientHeight;
+
+      let lo = 8, hi = maxSize, best = 8;
+
+      while (hi - lo > 0.5) {
+        const mid = (lo + hi) / 2;
+        titleEl.style.fontSize = mid + 'px';
+        descEl.style.fontSize = (mid * ratio) + 'px';
+
+        if (card.scrollWidth <= maxW && card.scrollHeight <= maxH) {
+          best = mid;
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+
+      // Reset to avoid visual flash
+      titleEl.style.fontSize = '';
+      descEl.style.fontSize = '';
+      card.style.overflow = '';
+      titleEl.style.opacity = origTitleOp;
+      descEl.style.opacity = origDescOp;
+
+      return best;
+    }
+
+    // --- Research cards: find min best size, apply uniformly ---
     const cards = document.querySelectorAll('.exploration-card');
     const descRatio = 0.75;
+    let minResearchSize = Infinity;
 
     cards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
       if (!title || !desc) return;
-
-      // Temporarily allow overflow so scrollHeight reports true content size
-      card.style.overflow = 'visible';
-      title.style.opacity = '1';
-      desc.style.opacity = '1';
-
-      const maxW = card.clientWidth;
-      const maxH = card.clientHeight;
-
-      let lo = 8, hi = 80, best = 14;
-
-      while (hi - lo > 0.5) {
-        const mid = (lo + hi) / 2;
-        title.style.fontSize = mid + 'px';
-        desc.style.fontSize = (mid * descRatio) + 'px';
-
-        if (card.scrollWidth <= maxW && card.scrollHeight <= maxH) {
-          best = mid;
-          lo = mid;
-        } else {
-          hi = mid;
-        }
-      }
-
-      best = best * 0.97;
-      title.style.fontSize = best + 'px';
-      desc.style.fontSize = (best * descRatio) + 'px';
-
-      // Restore
-      card.style.overflow = '';
-      title.style.opacity = '';
-      desc.style.opacity = '';
+      const best = findBestSize(card, title, desc, descRatio, 80);
+      if (best < minResearchSize) minResearchSize = best;
     });
 
-    // --- Project link cards ---
+    minResearchSize = minResearchSize * 0.97;
+    cards.forEach(card => {
+      const title = card.querySelector('.exploration-card-title');
+      const desc = card.querySelector('.exploration-card-desc');
+      if (!title || !desc) return;
+      title.style.fontSize = minResearchSize + 'px';
+      desc.style.fontSize = (minResearchSize * descRatio) + 'px';
+    });
+
+    // --- Project cards: find min best size, apply uniformly ---
     const projCards = document.querySelectorAll('.exploration-project-card');
     const projDescRatio = 0.72;
+    let minProjSize = Infinity;
 
     projCards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
       if (!title || !desc) return;
+      const best = findBestSize(card, title, desc, projDescRatio, 60);
+      if (best < minProjSize) minProjSize = best;
+    });
 
-      card.style.overflow = 'visible';
-      title.style.opacity = '1';
-      desc.style.opacity = '1';
-
-      const maxW = card.clientWidth;
-      const maxH = card.clientHeight;
-
-      let lo = 8, hi = 60, best = 12;
-
-      while (hi - lo > 0.5) {
-        const mid = (lo + hi) / 2;
-        title.style.fontSize = mid + 'px';
-        desc.style.fontSize = (mid * projDescRatio) + 'px';
-
-        if (card.scrollWidth <= maxW && card.scrollHeight <= maxH) {
-          best = mid;
-          lo = mid;
-        } else {
-          hi = mid;
-        }
-      }
-
-      best = best * 0.95;
-      title.style.fontSize = best + 'px';
-      desc.style.fontSize = (best * projDescRatio) + 'px';
-
-      card.style.overflow = '';
-      title.style.opacity = '';
-      desc.style.opacity = '';
+    minProjSize = minProjSize * 0.95;
+    projCards.forEach(card => {
+      const title = card.querySelector('.exploration-card-title');
+      const desc = card.querySelector('.exploration-card-desc');
+      if (!title || !desc) return;
+      title.style.fontSize = minProjSize + 'px';
+      desc.style.fontSize = (minProjSize * projDescRatio) + 'px';
     });
   }
 
@@ -1718,14 +1716,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // SUBMIT & RESTART
     // ============================================================
 
+    // Google Apps Script Web App URL — replace with your deployment URL
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbz9niriDDnGBDprj5jF4EVcmTAQ7QtIKgzi5F7UDth0cATcupfLsuhY24i3mj3tTI_Z/exec';
+
     function handleSubmit() {
       const payload = {
         timestamp: new Date().toISOString(),
         ...formData
       };
       console.log('Connect form submission:', JSON.stringify(payload, null, 2));
-      // TODO: POST to Google Apps Script endpoint
-      goTo(resolvedSteps.length - 1); // go to thank-you
+
+      // POST to Google Sheets (fire-and-forget with no-cors for Apps Script)
+      if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') {
+        fetch(GOOGLE_SHEET_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(err => console.warn('Sheet submission error:', err));
+      }
+
+      // Navigate to thank-you (don't wait for the POST)
+      goTo(resolvedSteps.length - 1);
       setTimeout(() => {
         document.getElementById('screenFinal').scrollIntoView({ behavior: 'smooth' });
       }, 2000);
