@@ -172,8 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (animated) {
       gsap.to(snapContainer, {
         scrollTop: screens[index].offsetTop,
-        duration: 1,
-        ease: 'power3.inOut',
+        duration: 0.75,
+        ease: 'power4.out',
         onComplete: () => { isScrolling = false; }
       });
     } else {
@@ -224,12 +224,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Desktop Keynote.mov icon → open QuickTime Player on double-click
+  const desktopKeynoteIcon = document.getElementById('desktopKeynoteIcon');
+  let lastKeynoteDesktopClick = 0;
+  desktopKeynoteIcon.addEventListener('click', () => {
+    const now = Date.now();
+    if (now - lastKeynoteDesktopClick < 400) {
+      openQTPlayer();
+      lastKeynoteDesktopClick = 0;
+    } else {
+      lastKeynoteDesktopClick = now;
+    }
+  });
+
   // Wheel-driven elevator
   snapContainer.addEventListener('wheel', (e) => {
     e.preventDefault();
     if (isScrolling) return;
-    if (e.deltaY > 30) scrollToScreen(currentScreen + 1);
-    else if (e.deltaY < -30) scrollToScreen(currentScreen - 1);
+    if (e.deltaY > 24) scrollToScreen(currentScreen + 1);
+    else if (e.deltaY < -24) scrollToScreen(currentScreen - 1);
   }, { passive: false });
 
   // Touch-driven elevator
@@ -240,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   snapContainer.addEventListener('touchend', (e) => {
     const delta = touchStartY - e.changedTouches[0].clientY;
-    if (Math.abs(delta) > 50) {
+    if (Math.abs(delta) > 40) {
       scrollToScreen(currentScreen + (delta > 0 ? 1 : -1));
     }
   }, { passive: true });
@@ -384,82 +397,25 @@ document.addEventListener('DOMContentLoaded', () => {
      ======================================== */
 
   function fitExplorationCards() {
-    // Helper: find best font size for a single card
-    function findBestSize(card, titleEl, descEl, ratio, maxSize) {
-      card.style.overflow = 'visible';
-      const origTitleOp = titleEl.style.opacity;
-      const origDescOp = descEl.style.opacity;
-      titleEl.style.opacity = '1';
-      descEl.style.opacity = '1';
-
-      const maxW = card.clientWidth;
-      const maxH = card.clientHeight;
-
-      let lo = 8, hi = maxSize, best = 8;
-
-      while (hi - lo > 0.5) {
-        const mid = (lo + hi) / 2;
-        titleEl.style.fontSize = mid + 'px';
-        descEl.style.fontSize = (mid * ratio) + 'px';
-
-        if (card.scrollWidth <= maxW && card.scrollHeight <= maxH) {
-          best = mid;
-          lo = mid;
-        } else {
-          hi = mid;
-        }
-      }
-
-      // Reset to avoid visual flash
-      titleEl.style.fontSize = '';
-      descEl.style.fontSize = '';
-      card.style.overflow = '';
-      titleEl.style.opacity = origTitleOp;
-      descEl.style.opacity = origDescOp;
-
-      return best;
-    }
-
-    // --- Find best size for each card type independently ---
+    /* Use fixed, readable sizes — the dynamic binary-search approach
+       kept producing tiny research text vs huge project text.        */
     const cards = document.querySelectorAll('.exploration-card');
     const projCards = document.querySelectorAll('.exploration-project-card');
-    const descRatio = 0.92;
-    let minResearchSize = Infinity;
-    let minProjSize = Infinity;
 
     cards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
       if (!title || !desc) return;
-      const best = findBestSize(card, title, desc, descRatio, 80);
-      if (best < minResearchSize) minResearchSize = best;
+      title.style.fontSize = '';
+      desc.style.fontSize = '';
     });
 
     projCards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
       if (!title || !desc) return;
-      const best = findBestSize(card, title, desc, descRatio, 60);
-      if (best < minProjSize) minProjSize = best;
-    });
-
-    // Use the same size for both types — take the smaller of the two
-    const unifiedSize = Math.min(minResearchSize * 0.88, minProjSize * 0.95);
-
-    cards.forEach(card => {
-      const title = card.querySelector('.exploration-card-title');
-      const desc = card.querySelector('.exploration-card-desc');
-      if (!title || !desc) return;
-      title.style.fontSize = unifiedSize + 'px';
-      desc.style.fontSize = (unifiedSize * descRatio) + 'px';
-    });
-
-    projCards.forEach(card => {
-      const title = card.querySelector('.exploration-card-title');
-      const desc = card.querySelector('.exploration-card-desc');
-      if (!title || !desc) return;
-      title.style.fontSize = unifiedSize + 'px';
-      desc.style.fontSize = (unifiedSize * descRatio) + 'px';
+      title.style.fontSize = '';
+      desc.style.fontSize = '';
     });
   }
 

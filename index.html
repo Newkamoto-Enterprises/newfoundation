@@ -113,10 +113,22 @@
           <div class="desktop-icon" id="desktopAboutIcon" data-x="8" data-y="62" style="left:8%;top:62%">
             <img src="Graphics/about.png" alt="About" draggable="false">
             <span>About</span>
+            <span class="desktop-tooltip">Double-click to open</span>
           </div>
           <div class="desktop-icon" id="desktopExplorationsIcon" data-x="82" data-y="7" style="left:82%;top:7%">
             <img src="Graphics/about.png" alt="Our Work" draggable="false">
             <span>Our Work</span>
+            <span class="desktop-tooltip">Double-click to open</span>
+          </div>
+
+          <!-- Keynote video file icon -->
+          <div class="desktop-icon desktop-icon-video" id="desktopKeynoteIcon" data-x="8" data-y="7"
+            style="left:8%;top:7%">
+            <div class="video-file-thumb">
+              <img src="Graphics/keynote.png" alt="Keynote" draggable="false">
+            </div>
+            <span>Keynote.mov</span>
+            <span class="desktop-tooltip">Double-click to open</span>
           </div>
 
           <!-- Mobile-only wallpaper icons for external links -->
@@ -419,6 +431,9 @@
          Screen 2b: Explorations
          ============================================ -->
     <section class="snap-screen screen-explorations" id="screenExplorations">
+      <a href="#desktop" style="position:absolute;top:32px;left:32px;z-index:10;cursor:pointer;"><img
+          src="Graphics/Newfoundation-Logo.svg" alt="Newfoundation" class="connect-logo"
+          style="position:static;top:auto;left:auto;"></a>
       <div class="explorations-inner">
         <div class="explorations-grid">
           <div class="exploration-card">

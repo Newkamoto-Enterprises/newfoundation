@@ -174,6 +174,7 @@ body {
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .explorations-inner {
@@ -191,18 +192,18 @@ body {
 }
 
 .explorations-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 100%;
-  flex: 3;
+  flex: 2.7;
   min-height: 0;
 }
 
 .exploration-card {
   background: #fafafa;
   border-radius: clamp(10px, 1.2vw, 16px);
-  padding: 36px;
+  padding: 20px 28px;
   border: none;
   opacity: 0;
   transform: translateY(15px);
@@ -217,17 +218,17 @@ body {
 .exploration-card-title {
   font-family: 'NewfoundationWhyte', sans-serif;
   font-weight: 400;
-  font-size: clamp(1.1rem, 1.2vw + 0.5rem, 2rem);
+  font-size: clamp(1.05rem, 0.66vw + 0.55rem, 1.54rem);
   letter-spacing: -0.01em;
   color: #000000;
-  margin: 0 0 clamp(1px, 0.2vh, 4px);
+  margin: 0 0 2px;
 }
 
 .exploration-card-desc {
   font-family: 'NewfoundationWhyte', sans-serif;
   font-weight: 400;
-  font-size: clamp(0.92rem, 0.8vw + 0.4rem, 1.6rem);
-  line-height: 1.35;
+  font-size: clamp(1.17rem, 0.73vw + 0.51rem, 1.58rem);
+  line-height: 1.36;
   color: #666666;
   margin: 0;
 }
@@ -237,7 +238,7 @@ body {
   display: flex;
   gap: 20px;
   width: 100%;
-  flex: 1.5;
+  flex: 1.35;
   min-height: 0;
 }
 
@@ -247,7 +248,7 @@ body {
   background: #ffffff;
   border: 1.5px solid rgba(0, 0, 0, 0.12);
   border-radius: clamp(10px, 1.2vw, 16px);
-  padding: 28px;
+  padding: 14px;
   text-decoration: none;
   display: flex;
   flex-direction: column;
@@ -263,7 +264,7 @@ body {
 .exploration-project-url {
   margin-top: auto;
   font-family: 'NewfoundationWhyte', sans-serif;
-  font-size: 9px;
+  font-size: 13px;
   color: #aaaaaa;
   letter-spacing: 0.02em;
 }
@@ -275,13 +276,13 @@ body {
 }
 
 .exploration-project-card .exploration-card-title {
-  font-size: clamp(0.95rem, 0.9vw + 0.35rem, 1.5rem);
+  font-size: clamp(1.05rem, 0.99vw + 0.39rem, 1.65rem);
   margin: 0 0 clamp(2px, 0.4vh, 6px);
 }
 
 .exploration-project-card .exploration-card-desc {
-  font-size: clamp(0.82rem, 0.6vw + 0.3rem, 1.2rem);
-  line-height: 1.35;
+  font-size: clamp(1.17rem, 0.73vw + 0.51rem, 1.58rem);
+  line-height: 1.36;
 }
 
 @media (max-width: 900px) {
@@ -290,30 +291,47 @@ body {
   }
 
   .exploration-project-card {
-    flex: 1 1 calc(33% - 12px);
+    flex: 1 1 calc(50% - 10px);
     min-width: 120px;
   }
 }
 
 @media (max-width: 640px) {
   .screen-explorations {
-    height: auto;
-    max-height: none;
-    overflow: visible;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
   }
 
   .explorations-inner {
-    height: auto;
-    max-height: none;
-    overflow: visible;
+    height: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 5vh 5vw;
+    gap: 12px;
+  }
+
+  .explorations-grid {
+    grid-template-columns: 1fr;
+    flex: none;
+    gap: 12px;
+  }
+
+  .exploration-card {
+    flex: none;
+    padding: 16px 20px;
   }
 
   .explorations-projects {
     flex-direction: column;
+    flex: none;
+    gap: 12px;
   }
 
   .exploration-project-card {
-    flex: 1 1 100%;
+    flex: none;
+    padding: 14px 18px;
   }
 }
 
@@ -1071,8 +1089,8 @@ textarea.connect-input {
 }
 
 .desktop-icon img {
-  width: 8vw;
-  height: 8vw;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
@@ -1086,6 +1104,60 @@ textarea.connect-input {
   text-align: center;
   line-height: 1.2;
   pointer-events: none;
+}
+
+/* macOS video file thumbnail on desktop */
+.desktop-icon-video {
+  cursor: default;
+}
+
+.video-file-thumb {
+  width: 120px;
+  height: 75px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+}
+
+.video-file-thumb img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* macOS-style tooltip for desktop icons */
+.desktop-tooltip {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  text-shadow: none;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.desktop-icon:hover .desktop-tooltip {
+  opacity: 1;
+}
+
+.desktop-icon.dragging .desktop-tooltip {
+  opacity: 0;
 }
 
 /* ---- macOS Dock ---- */
@@ -2142,11 +2214,6 @@ textarea.connect-input {
   /* ---- Screen 1: Desktop ---- */
   .screen-desktop {
     padding: 2vh 2vw;
-  }
-
-  .desktop-icon img {
-    width: 16vw;
-    height: 16vw;
   }
 
   .desktop-icon span {
