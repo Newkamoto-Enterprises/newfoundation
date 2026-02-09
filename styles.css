@@ -723,6 +723,17 @@ body {
   margin-bottom: 0;
 }
 
+.connect-intro-text .char {
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(15px);
+}
+
+.connect-intro~.connect-btn-row {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
 /* Thank You */
 .connect-thank-you {
   text-align: center;

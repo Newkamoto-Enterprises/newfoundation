@@ -758,6 +758,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetConnectAnim() {
     if (connectTimeline) { connectTimeline.kill(); connectTimeline = null; }
     gsap.set(connectAnimTargets, { opacity: 0, y: 15 });
+    // Also reset intro word spans and button
+    const introChars = document.querySelectorAll('.connect-intro-text .char');
+    const introBtn = document.querySelector('.connect-intro ~ .connect-btn-row');
+    if (introChars.length) gsap.set(introChars, { opacity: 0, y: 15 });
+    if (introBtn) gsap.set(introBtn, { opacity: 0, y: 15 });
     connectAnimPlayed = false;
   }
 
@@ -766,16 +771,40 @@ document.addEventListener('DOMContentLoaded', () => {
       if (entry.isIntersecting && !connectAnimPlayed) {
         connectAnimPlayed = true;
 
-        connectTimeline = gsap.timeline({ delay: 0.15 }).to(connectAnimTargets, {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: {
-            each: 0.12,
-            ease: 'none'
-          },
-          ease: 'power2.out'
-        });
+        // Check for intro word spans (word-by-word stagger like about page)
+        const introChars = document.querySelectorAll('.connect-intro-text .char');
+        const introBtn = document.querySelector('.connect-intro ~ .connect-btn-row');
+
+        if (introChars.length > 0) {
+          // Make form shell visible immediately so words can animate inside it
+          gsap.set(connectFormShell, { opacity: 1, y: 0 });
+
+          const targets = [connectLogo, ...introChars];
+          if (introBtn) targets.push(introBtn);
+
+          connectTimeline = gsap.timeline({ delay: 0.15 }).to(targets, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: {
+              each: 0.016,
+              ease: 'none'
+            },
+            ease: 'power2.out'
+          });
+        } else {
+          // Fallback: simple fade for non-intro steps
+          connectTimeline = gsap.timeline({ delay: 0.15 }).to(connectAnimTargets, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: {
+              each: 0.12,
+              ease: 'none'
+            },
+            ease: 'power2.out'
+          });
+        }
       } else if (!entry.isIntersecting && connectAnimPlayed) {
         resetConnectAnim();
       }
@@ -1268,6 +1297,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Fit intro text to match about page sizing
       fitIntroText();
+      // Split intro text into word spans for stagger animation
+      splitIntroWords();
     }
 
     function fitIntroText() {
@@ -1275,6 +1306,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!introEl) return;
       const introText = introEl.querySelector('.connect-intro-text');
       if (!introText) return;
+
+      // Temporarily show all chars for measurement
+      const chars = introText.querySelectorAll('.char');
+      chars.forEach(s => { s.style.opacity = '1'; s.style.transform = 'none'; });
 
       const panel = document.querySelector('.connect-panel-inner');
       if (!panel) return;
@@ -1305,8 +1340,47 @@ document.addEventListener('DOMContentLoaded', () => {
       best = best * 0.89;
       introText.style.fontSize = best + 'px';
 
+      // Hide chars again if animation hasn't played yet
+      if (!connectAnimPlayed) {
+        chars.forEach(s => { s.style.opacity = ''; s.style.transform = ''; });
+      }
+
       requestAnimationFrame(() => {
         introText.style.transition = '';
+      });
+    }
+
+    function splitIntroWords() {
+      const introText = viewport.querySelector('.connect-intro-text');
+      if (!introText || introText.querySelector('.char')) return; // already split
+
+      const paragraphs = introText.querySelectorAll('p');
+      paragraphs.forEach(p => {
+        const fragment = document.createDocumentFragment();
+        const childNodes = Array.from(p.childNodes);
+
+        childNodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const parts = node.textContent.split(/(\s+)/);
+            parts.forEach(part => {
+              if (/^\s+$/.test(part)) {
+                fragment.appendChild(document.createTextNode(part));
+              } else if (part.length > 0) {
+                const span = document.createElement('span');
+                span.classList.add('char');
+                span.textContent = part;
+                fragment.appendChild(span);
+              }
+            });
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            // For elements like <span class="brand-name">, add char class
+            node.classList.add('char');
+            fragment.appendChild(node);
+          }
+        });
+
+        p.innerHTML = '';
+        p.appendChild(fragment);
       });
     }
 
