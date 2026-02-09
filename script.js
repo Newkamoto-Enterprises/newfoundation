@@ -1030,14 +1030,20 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
       },
       {
-        id: 'identity3',
+        id: 'identity3a',
         question: 'About you',
         fields: [
           { key: 'socialLinks', label: 'Links', type: 'multiText', required: true, placeholder: 'https://x.com/handle', maxFields: 3 },
+          { key: 'bio', label: 'Short Bio', type: 'textarea', required: true, placeholder: '2-3 sentences about your background.' }
+        ]
+      },
+      {
+        id: 'identity3b',
+        question: 'Your research',
+        fields: [
           { key: 'researchFocus', label: 'Research Focus', type: 'text', required: false, placeholder: 'e.g. Multi-agent systems, AI Safety, ZK Proofs' },
           { key: 'achievements', label: 'Key Achievements / Benchmarks', type: 'textarea', required: false, placeholder: 'Notable breakthroughs, benchmarks, publications...' },
-          { key: 'grantsAwards', label: 'Previous Grants or Awards', type: 'text', required: false, placeholder: 'e.g. NSF Grant, Ethereum Foundation, Best Paper Award' },
-          { key: 'bio', label: 'Short Bio', type: 'textarea', required: true, placeholder: '2-3 sentences about your background.' }
+          { key: 'grantsAwards', label: 'Previous Grants or Awards', type: 'text', required: false, placeholder: 'e.g. NSF Grant, Ethereum Foundation, Best Paper Award' }
         ]
       },
       {
