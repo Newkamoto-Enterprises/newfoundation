@@ -1,0 +1,2290 @@
+/* ========================================
+   Fonts
+   ======================================== */
+
+@font-face {
+  font-family: 'NewfoundationWhyte';
+  src: url('fonts/NewfoundationWhyte/Light/NewfoundationWhyte-Light.woff2') format('woff2'),
+    url('fonts/NewfoundationWhyte/Light/NewfoundationWhyte-Light.woff') format('woff'),
+    url('fonts/NewfoundationWhyte/Light/NewfoundationWhyte-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NewfoundationWhyte';
+  src: url('fonts/NewfoundationWhyte/Book/NewfoundationWhyte-Book.woff2') format('woff2'),
+    url('fonts/NewfoundationWhyte/Book/NewfoundationWhyte-Book.woff') format('woff'),
+    url('fonts/NewfoundationWhyte/Book/NewfoundationWhyte-Book.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABCViafont';
+  src: url('fonts/ABCViafont-Regular-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ITCGaramondLtNarrow';
+  src: url('fonts/ITCGaramondStd-LtNarrow.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: #ffffff;
+  color: #fff;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+/* ========================================
+   Boot Screen
+   ======================================== */
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.boot-screen.done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot-logo {
+  width: 64px;
+  height: 64px;
+  filter: invert(1);
+  opacity: 0;
+  animation: bootLogoIn 0.8s ease forwards 0.3s;
+}
+
+@keyframes bootLogoIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.boot-progress-track {
+  position: absolute;
+  bottom: 18%;
+  width: 200px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0;
+  animation: bootLogoIn 0.5s ease forwards 0.9s;
+}
+
+.boot-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 3px;
+  transition: width 0.15s linear;
+}
+
+/* ========================================
+   Snap-scroll container
+   ======================================== */
+
+.snap-container {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  transition: opacity 0.4s ease;
+}
+
+/* Each screen is a full viewport slide */
+.snap-screen {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.screen-desktop {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  min-height: 100vh;
+  height: 100vh;
+  padding: 8vh 4vw;
+  overflow: hidden;
+}
+
+.desktop-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #000000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ========================================
+   Screen 2b: Explorations
+   ======================================== */
+
+.screen-explorations {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background: #ffffff;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.explorations-inner {
+  width: 100%;
+  max-width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(15px);
+  height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.explorations-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  flex: 4;
+  min-height: 0;
+}
+
+.exploration-card {
+  background: #fafafa;
+  border-radius: clamp(10px, 1.2vw, 16px);
+  padding: 20px;
+  border: none;
+  opacity: 0;
+  transform: translateY(15px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.exploration-card-title {
+  font-family: 'NewfoundationWhyte', sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 1.2vw + 0.5rem, 2rem);
+  letter-spacing: -0.01em;
+  color: #000000;
+  margin: 0 0 clamp(2px, 0.4vh, 8px);
+}
+
+.exploration-card-desc {
+  font-family: 'NewfoundationWhyte', sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.92rem, 0.8vw + 0.4rem, 1.6rem);
+  line-height: 1.35;
+  color: #666666;
+  margin: 0;
+}
+
+/* Project Link Cards */
+.explorations-projects {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.exploration-project-card {
+  flex: 1 1 0;
+  min-width: 0;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: clamp(10px, 1.2vw, 16px);
+  padding: 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+.exploration-project-card:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.exploration-project-card .exploration-card-title {
+  font-size: clamp(0.95rem, 0.9vw + 0.35rem, 1.5rem);
+  margin: 0 0 clamp(2px, 0.4vh, 6px);
+}
+
+.exploration-project-card .exploration-card-desc {
+  font-size: clamp(0.82rem, 0.6vw + 0.3rem, 1.2rem);
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .explorations-projects {
+    flex-wrap: wrap;
+  }
+
+  .exploration-project-card {
+    flex: 1 1 calc(33% - 12px);
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  .screen-explorations {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .explorations-inner {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .explorations-projects {
+    flex-direction: column;
+  }
+
+  .exploration-project-card {
+    flex: 1 1 100%;
+  }
+}
+
+/* ========================================
+   Screen 3: Connect Form
+   ======================================== */
+
+.screen-connect {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: #ffffff;
+  min-height: 100vh;
+  position: relative;
+}
+
+.connect-logo {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  width: 28px;
+  height: 28px;
+  opacity: 0;
+  transform: translateY(15px);
+  z-index: 10;
+}
+
+.connect-panel-inner {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: clamp(4px, 0.8vh, 10px);
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.connect-form-shell {
+  width: 100%;
+  max-width: 580px;
+  padding: clamp(16px, 3.5vh, 40px) clamp(20px, 5vw, 60px) clamp(20px, 3vh, 48px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+/* Progress Dots */
+.connect-progress-dots {
+  display: flex;
+  gap: clamp(8px, 1.2vw, 12px);
+  justify-content: center;
+  position: absolute;
+  top: clamp(24px, 4vh, 48px);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  transition: opacity 0.7s ease;
+}
+
+.connect-dot {
+  width: clamp(7px, 1.1vh, 10px);
+  height: clamp(7px, 1.1vh, 10px);
+  border-radius: 50%;
+  background: #d8d8d8;
+  border: none;
+  padding: 0;
+  cursor: default;
+  outline: none;
+  transition: background 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.connect-dot.active {
+  background: #000000;
+  transform: scale(1.3);
+}
+
+.connect-dot.completed {
+  background: #888;
+  cursor: pointer;
+}
+
+.connect-dot.completed:hover {
+  background: #555;
+  transform: scale(1.2);
+}
+
+/* Steps */
+.connect-steps-viewport {
+  position: relative;
+  min-height: clamp(280px, 55vh, 500px);
+}
+
+.connect-step {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(36px);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+}
+
+.connect-step.connect-entering {
+  transition: opacity 0.9s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 1.0s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.connect-step.connect-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.connect-step.connect-exit-up {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.connect-step.connect-exit-down {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+/* Staggered field fade-in */
+.connect-step .connect-question,
+.connect-step .connect-field,
+.connect-step .connect-role-grid,
+.connect-step .connect-btn-row {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.connect-step.connect-stagger-in .connect-question,
+.connect-step.connect-stagger-in .connect-field,
+.connect-step.connect-stagger-in .connect-role-grid,
+.connect-step.connect-stagger-in .connect-btn-row {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Typography */
+.connect-question {
+  font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 2.5vw + 0.5rem, 1.85rem);
+  letter-spacing: -0.01em;
+  line-height: 1.28;
+  color: #000;
+  margin-bottom: clamp(16px, 3.5vh, 32px);
+}
+
+/* Inputs */
+.connect-input {
+  width: 100%;
+  padding: clamp(12px, 2vh, 18px) clamp(14px, 2vw, 22px);
+  font-size: clamp(0.95rem, 1.2vw + 0.3rem, 1.15rem);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  color: #000;
+  background: #fff;
+  border: 1px solid #c8c8c8;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.connect-input::placeholder {
+  color: #b0b0b0;
+}
+
+.connect-input:focus {
+  border-color: #333;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06),
+    0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Role Tiles */
+.connect-role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(10px, 1.5vh, 16px);
+}
+
+.connect-role-tile {
+  padding: clamp(14px, 2.5vh, 22px) clamp(12px, 2vw, 20px);
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  background: #fafafa;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+  font-size: clamp(0.85rem, 1.1vw + 0.3rem, 1.05rem);
+  font-weight: 400;
+  color: #333;
+  user-select: none;
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.connect-role-tile:hover {
+  border-color: #aaa;
+  background: #f2f2f2;
+}
+
+.connect-role-tile:active {
+  transform: scale(0.97);
+}
+
+.connect-role-tile.selected {
+  border-color: #A2CA5D;
+  background: #A2CA5D;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(162, 202, 93, 0.3);
+}
+
+/* Buttons */
+.connect-btn-row {
+  display: flex;
+  gap: 14px;
+  margin-top: clamp(20px, 4vh, 48px);
+}
+
+.connect-btn {
+  padding: clamp(12px, 2vh, 17px) clamp(24px, 4vw, 40px);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: clamp(0.88rem, 1vw + 0.3rem, 1.0rem);
+  font-weight: 500;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.connect-btn:active {
+  transform: scale(0.96);
+}
+
+.connect-btn-primary {
+  background: #000;
+  color: #fff;
+  flex: 1;
+}
+
+.connect-btn-primary:hover {
+  background: #222;
+}
+
+/* Forward Arrow (right side) */
+.connect-side-arrow-fwd {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 50%;
+  color: #bbb;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.connect-side-arrow-fwd.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.connect-side-arrow-fwd:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.connect-side-arrow-fwd:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.connect-side-arrow-fwd svg {
+  width: 24px;
+  height: 24px;
+}
+
+.connect-btn-primary:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  cursor: default;
+  transform: none;
+}
+
+/* Side Arrow */
+.connect-side-arrow {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 50%;
+  color: #bbb;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.connect-side-arrow.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.connect-side-arrow:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.connect-side-arrow:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.connect-side-arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Thank You */
+.connect-thank-you {
+  text-align: center;
+  padding: 56px 0;
+}
+
+.connect-check {
+  width: 52px;
+  height: 52px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 32px;
+}
+
+.connect-check svg {
+  width: 26px;
+  height: 26px;
+}
+
+.connect-thank-you h2 {
+  font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+  font-weight: 400;
+  font-size: 2rem;
+  margin-bottom: 14px;
+}
+
+.connect-thank-you p {
+  color: #888;
+  font-size: 1.05rem;
+  margin-bottom: 32px;
+}
+
+.connect-restart {
+  color: #aaa;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.4s ease;
+}
+
+.connect-restart:hover {
+  color: #555;
+}
+
+/* Field Groups — multiple inputs in one step */
+.connect-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 20px);
+}
+
+.connect-field {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 6px);
+}
+
+.connect-field-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #666;
+  letter-spacing: 0.02em;
+}
+
+.connect-field-label .connect-optional {
+  font-weight: 400;
+  color: #b0b0b0;
+  font-size: 0.78rem;
+}
+
+.connect-description {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #999;
+  margin-top: -4px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+/* Textarea variant */
+textarea.connect-input {
+  resize: vertical;
+  min-height: clamp(60px, 10vh, 100px);
+  line-height: 1.45;
+}
+
+/* MultiText — dynamic growing input group */
+.connect-multi-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.connect-multi-text-container .connect-input {
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+/* Multi-select checkmark */
+.connect-role-tile.multi-select.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.connect-role-tile.multi-select {
+  position: relative;
+}
+
+/* Single-line choice (for shorter option text) */
+.connect-role-grid.single-col {
+  grid-template-columns: 1fr;
+}
+
+.connect-role-tile.long-text {
+  text-align: left;
+  padding: clamp(14px, 2.5vh, 20px) clamp(14px, 2vw, 22px);
+  font-size: clamp(0.82rem, 1vw + 0.2rem, 0.95rem);
+  line-height: 1.35;
+}
+
+@media (min-width: 520px) {
+  .connect-form-shell {
+    padding: clamp(24px, 4.5vh, 44px) clamp(32px, 6vw, 60px) clamp(24px, 4vh, 48px);
+  }
+}
+
+/* ---- Menu Bar ---- */
+
+.menu-bar {
+  width: 100%;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 100;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.menu-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menu-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
+}
+
+.menu-clock {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  padding-left: 4px;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.menu-item {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 4px 10px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.menu-logo {
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-logo-img {
+  width: 16px;
+  height: 16px;
+  filter: invert(1);
+}
+
+.menu-brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.menu-link {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* ---- Dropdown ---- */
+
+.menu-dropdown-trigger {
+  position: relative;
+}
+
+.menu-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  min-width: 180px;
+  background: rgba(30, 30, 30, 0.82);
+  backdrop-filter: saturate(200%) blur(60px);
+  -webkit-backdrop-filter: saturate(200%) blur(60px);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 0;
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.65),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.06);
+  z-index: 200;
+}
+
+.menu-dropdown.open {
+  display: block;
+}
+
+.menu-dropdown-item {
+  display: block;
+  padding: 6px 14px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 0 4px;
+  transition: background 0.12s ease;
+}
+
+.menu-dropdown-item:hover {
+  background: rgba(59, 130, 246, 0.8);
+}
+
+/* ---- Desktop Area ---- */
+
+.desktop-area {
+  flex: 1;
+  position: relative;
+  margin: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.desktop-wallpaper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Scanline overlay */
+.desktop-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(to bottom,
+      transparent 0px,
+      transparent 1px,
+      rgba(0, 0, 0, 0.15) 1px,
+      rgba(0, 0, 0, 0.15) 2px);
+}
+
+/* ---- Desktop Icons ---- */
+
+.desktop-icon {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  user-select: none;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.desktop-icon:active {
+  cursor: default;
+}
+
+.desktop-icon.dragging {
+  cursor: default;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 50;
+  transition: none;
+}
+
+.desktop-icon img {
+  width: 8vw;
+  height: 8vw;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+.desktop-icon span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+/* ---- macOS Dock ---- */
+
+.dock {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(29px);
+  -webkit-backdrop-filter: blur(29px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 2px 20px rgba(0, 0, 0, 0.25),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.3);
+}
+
+.dock-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px 5px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  width: 77px;
+  height: 77px;
+}
+
+.dock-icon:hover {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.dock-icon img {
+  width: 67px;
+  height: 67px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  border-radius: 16px;
+}
+
+.dock-label {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.dock-icon:hover .dock-label {
+  opacity: 1;
+}
+
+/* ---- Finder Windows ---- */
+
+.finder-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.finder-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.finder-window {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: 680px;
+  max-width: 90vw;
+  background: #1e1e1e;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 22px 70px 4px rgba(0, 0, 0, 0.56),
+    0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  color: #e0e0e0;
+}
+
+.finder-overlay.active .finder-window {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.finder-window.dragging {
+  transition: none;
+}
+
+/* Title bar */
+.finder-titlebar {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  background: #2a2a2a;
+  border-bottom: 1px solid #1a1a1a;
+  cursor: grab;
+  user-select: none;
+}
+
+.finder-titlebar:active {
+  cursor: grabbing;
+}
+
+.finder-traffic-lights {
+  display: flex;
+  gap: 8px;
+  margin-right: 12px;
+}
+
+.finder-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: transparent;
+}
+
+.finder-btn-close {
+  background: #ff5f57;
+}
+
+.finder-btn-minimize {
+  background: #febc2e;
+}
+
+.finder-btn-maximize {
+  background: #28c840;
+}
+
+.finder-traffic-lights:hover .finder-btn {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.finder-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 12px;
+}
+
+.finder-nav-arrow {
+  opacity: 0.6;
+}
+
+.finder-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e0;
+  flex: 1;
+  text-align: center;
+  margin-right: 60px;
+}
+
+/* Toolbar / breadcrumb */
+.finder-toolbar {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  background: #262626;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.finder-breadcrumb {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Column header */
+.finder-col-header {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 14px;
+  background: #2a2a2a;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 11px;
+  font-weight: 500;
+  color: #999;
+}
+
+.finder-col-name {
+  flex: 1;
+  padding-left: 26px;
+}
+
+.finder-col-date {
+  width: 130px;
+  text-align: left;
+}
+
+.finder-col-size {
+  width: 70px;
+  text-align: right;
+}
+
+.finder-col-kind {
+  width: 90px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* File list */
+.finder-list {
+  overflow-y: auto;
+  max-height: 260px;
+}
+
+.finder-row {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 14px;
+  text-decoration: none;
+  color: #e0e0e0;
+  cursor: default;
+  transition: background 0.1s ease;
+}
+
+.finder-row:nth-child(odd) {
+  background: #242424;
+}
+
+.finder-row:nth-child(even) {
+  background: #1e1e1e;
+}
+
+.finder-row:hover {
+  background: rgba(59, 130, 246, 0.25);
+}
+
+.finder-row-folder-header {
+  background: rgba(59, 130, 246, 0.35) !important;
+}
+
+.finder-row-nested .finder-col-name {
+  padding-left: 16px;
+}
+
+.finder-file-icon {
+  width: 20px;
+  font-size: 14px;
+  flex-shrink: 0;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Status bar */
+.finder-statusbar {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  background: #222;
+  border-top: 1px solid #1a1a1a;
+  font-size: 11px;
+  color: #777;
+}
+
+/* ========================================
+   Screen 2: About text — black on white
+   ======================================== */
+
+.screen-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11vh 7vw;
+  background: #ffffff;
+}
+
+.text-flow {
+  font-family: 'ITCGaramondLtNarrow', 'Garamond', 'Georgia', serif;
+  font-weight: 300;
+  font-size: 20px;
+  /* JS will override via binary search */
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: #000000;
+  width: 100%;
+  transition: font-size 0.2s ease;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Logo sits inline with the text */
+.logo {
+  display: inline;
+  opacity: 0;
+}
+
+.logo svg {
+  width: 1.1em;
+  height: auto;
+  display: inline;
+  vertical-align: baseline;
+  margin-right: 0.05em;
+  position: relative;
+  top: 0.15em;
+}
+
+.logo svg path {
+  fill: #000000;
+}
+
+/* Title inline */
+.title {
+  font-family: 'NewfoundationWhyte', sans-serif;
+  font-weight: 400;
+  font-size: 0.8em;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  display: inline;
+}
+
+.title .char {
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(15px);
+}
+
+/* Body text inline */
+.body-text {
+  display: inline;
+}
+
+.body-text .char {
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(15px);
+}
+
+/* Brand names in about text — NewfoundationWhyte font */
+.brand-name {
+  font-family: 'NewfoundationWhyte', sans-serif;
+  font-weight: 400;
+  font-size: 0.8em;
+  letter-spacing: 0.02em;
+}
+
+/* Special words — ABCViafont */
+.viafont-word {
+  font-family: 'ABCViafont', sans-serif;
+  font-weight: 400;
+  font-size: 0.8em;
+  letter-spacing: 0.02em;
+}
+
+/* ========================================
+   Screen 3: Final — Thank You + Video
+   ======================================== */
+
+.screen-final {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.final-video-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 7s ease;
+}
+
+.final-video-bg.visible {
+  opacity: 1;
+}
+
+.final-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100vh;
+  padding: 3vh 0 3vh;
+  text-align: center;
+}
+
+.final-title {
+  font-family: 'NewfoundationWhyte', sans-serif;
+  font-weight: 400;
+  font-size: 14vw;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 0.95;
+  white-space: nowrap;
+  mix-blend-mode: difference;
+}
+
+.final-title .letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.final-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15vw;
+}
+
+.final-word {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 1.35vw;
+  color: #ffffff;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.final-flower {
+  width: 2.5vw;
+  height: 2.5vw;
+  min-width: 24px;
+  min-height: 24px;
+  margin: 4vh 0;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.final-copyright {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 1.35vw;
+  color: #ffffff;
+  line-height: 1.3;
+  text-align: center;
+  letter-spacing: 0.03em;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ---- Glassy Back-to-Top Button ---- */
+
+.back-to-top-glass {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  background: rgba(120, 120, 120, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(120, 120, 120, 0.22);
+  color: rgba(80, 80, 80, 0.7);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, opacity 0.6s ease;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.back-to-top-glass.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.back-to-top-glass:hover {
+  background: rgba(100, 100, 100, 0.28);
+  color: rgba(50, 50, 50, 0.9);
+}
+
+.back-to-top-glass:active {
+  transform: scale(0.92);
+}
+
+.back-to-top-glass svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Back-to-top inside connect form step 3 */
+#connectBackToTop {
+  margin-top: 40px;
+  align-self: center;
+  background: rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+#connectBackToTop:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* Back-to-top on final screen */
+.final-back-to-top {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  cursor: pointer;
+}
+
+.final-back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
+
+.final-back-to-top-label {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 400;
+  font-size: 1.1vw;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ========================================
+   QuickTime Player Overlay
+   ======================================== */
+
+.qt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.qt-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.qt-player {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 72vw;
+  max-width: 960px;
+  min-width: 480px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 22px 70px 4px rgba(0, 0, 0, 0.56),
+    0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  transform: translate(-50%, -50%) scale(0.88);
+  opacity: 0;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.3s ease;
+}
+
+.qt-overlay.open .qt-player {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.qt-player.dragging {
+  transition: none;
+}
+
+/* ---- Title Bar (brushed metal) ---- */
+
+.qt-titlebar {
+  height: 38px;
+  background: #1a1a1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.qt-titlebar:active {
+  cursor: grabbing;
+}
+
+.qt-traffic-lights {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  z-index: 2;
+}
+
+.qt-btn {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: filter 0.15s ease;
+  color: transparent;
+}
+
+.qt-btn svg {
+  width: 6px;
+  height: 6px;
+}
+
+.qt-btn:hover {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.qt-btn-close,
+.qt-btn-minimize,
+.qt-btn-maximize {
+  background: #555;
+  border-color: #444;
+}
+
+.qt-btn-close:hover,
+.qt-btn-minimize:hover,
+.qt-btn-maximize:hover {
+  background: #777;
+}
+
+.qt-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.01em;
+  pointer-events: none;
+}
+
+.qt-titlebar-spacer {
+  flex: 1;
+}
+
+/* ---- Video Container ---- */
+
+.qt-video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* 16:9 */
+  background: #000;
+  overflow: hidden;
+}
+
+/* ---- Control Bar ---- */
+
+.qt-controls {
+  display: none;
+}
+
+.qt-controls-left,
+.qt-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qt-ctrl-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.qt-ctrl-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.qt-scrubber {
+  flex: 1;
+}
+
+.qt-scrubber-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.qt-scrubber-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #4fc3f7, #29b6f6);
+  border-radius: 2px;
+  transition: width 0.3s linear;
+}
+
+.qt-time {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.02em;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 768px) {
+  .qt-player {
+    width: 94vw;
+    min-width: unset;
+  }
+}
+
+/* ---- Dock icon size overrides ---- */
+
+/* Trash – unsquircled like macOS, cropped to show just the trash can */
+#dockTrash img {
+  width: 67px;
+  height: 67px;
+  border-radius: 0;
+  object-fit: cover;
+  object-position: center center;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* ---- Keynote icon double-click hint ---- */
+
+.dock-icon#keynoteIcon {
+  cursor: pointer;
+}
+
+/* ========================================
+   System Exit Dialog (macOS-style)
+   ======================================== */
+
+.system-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.system-dialog-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.system-dialog {
+  width: 340px;
+  max-width: 88vw;
+  background: rgba(18, 18, 18, 0.82);
+  backdrop-filter: saturate(180%) blur(50px);
+  -webkit-backdrop-filter: saturate(180%) blur(50px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.7),
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  transform: scale(0.96);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.system-dialog-overlay.active .system-dialog {
+  transform: scale(1);
+}
+
+.system-dialog-body {
+  padding: 24px 24px 20px;
+}
+
+.system-dialog-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+.system-dialog-desc {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.system-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 20px 18px;
+}
+
+.system-dialog-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.system-dialog-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.system-dialog-cancel:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.system-dialog-confirm {
+  background: rgba(59, 130, 246, 0.85);
+  color: #ffffff;
+}
+
+.system-dialog-confirm:hover {
+  background: rgba(59, 130, 246, 1);
+}
+
+/* ========================================
+   Hamburger Button (mobile only)
+   ======================================== */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 110;
+}
+
+.hamburger-line {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+.hamburger.open .hamburger-line:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+
+.hamburger.open .hamburger-line:last-child {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+/* ========================================
+   Mobile Menu (Full-Screen Overlay)
+   ======================================== */
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-menu-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-menu-item {
+  display: block;
+  padding: 16px 40px;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: color 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  text-align: center;
+}
+
+.mobile-menu-item:active,
+.mobile-menu-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ---- Mobile menu flower logo ---- */
+.mobile-menu-flower {
+  position: absolute;
+  top: 24px;
+  left: 20px;
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* ---- Mobile-only wallpaper icons ---- */
+.mobile-wallpaper-icon {
+  display: none;
+}
+
+/* ========================================
+   Responsive — Tablet & Mobile (≤ 768px)
+   ======================================== */
+
+@media (max-width: 768px) {
+
+  /* ---- Hamburger: show ---- */
+  .hamburger {
+    display: flex;
+    z-index: 9999;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
+
+  /* ---- Show mobile-only wallpaper icons ---- */
+  .mobile-wallpaper-icon {
+    display: flex;
+  }
+
+  /* ---- Menu bar: hide desktop items ---- */
+  .menu-item.menu-brand,
+  .menu-item.menu-dropdown-trigger,
+  .menu-item#menuAbout,
+  .menu-item.menu-link,
+  .menu-right {
+    display: none;
+  }
+
+  /* ---- Screen 1: Desktop ---- */
+  .screen-desktop {
+    padding: 2vh 2vw;
+  }
+
+  .desktop-icon img {
+    width: 16vw;
+    height: 16vw;
+  }
+
+  .desktop-icon span {
+    font-size: 11px;
+  }
+
+  /* ---- Dock: hide desktop-only icons, make remaining 4 bigger ---- */
+  .dock-desktop-only {
+    display: none;
+  }
+
+  .dock {
+    padding: 8px 16px;
+    gap: 6vw;
+    border-radius: 22px;
+    bottom: 10px;
+  }
+
+  .dock-icon {
+    width: 18vw;
+    height: 18vw;
+    max-width: 80px;
+    max-height: 80px;
+    padding: 2vw;
+  }
+
+  .dock-icon img {
+    width: 100%;
+    height: 100%;
+    border-radius: 18%;
+  }
+
+  #dockTrash img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .dock-label {
+    font-size: 10px;
+    top: -24px;
+    padding: 2px 8px;
+  }
+
+  /* ---- Finder: hide extra columns ---- */
+  .finder-col-date,
+  .finder-col-size,
+  .finder-col-kind {
+    display: none;
+  }
+
+  .finder-col-name {
+    padding-left: 8px;
+  }
+
+  .finder-window {
+    width: 92vw;
+    max-width: 92vw;
+  }
+
+  /* ---- QuickTime player ---- */
+  .qt-player {
+    width: 94vw;
+    min-width: unset;
+  }
+
+  /* ---- Screen 2: About text ---- */
+  .screen-text {
+    padding: 5vh 5vw;
+  }
+
+  /* ---- Screen 3: Connect form ---- */
+  .connect-form-shell {
+    padding: 48px 24px 40px;
+  }
+
+  .connect-question {
+    font-size: 1.5rem;
+    margin-bottom: 36px;
+  }
+
+  .connect-side-arrow {
+    left: 12px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .connect-side-arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .connect-logo {
+    top: 20px;
+    left: 20px;
+    width: 24px;
+    height: 24px;
+  }
+
+  /* ---- Screen 4: Final ---- */
+  .final-word {
+    font-size: clamp(16px, 5vw, 24px);
+    line-height: 1.5;
+  }
+
+  .final-copyright {
+    font-size: clamp(16px, 4.5vw, 22px);
+    line-height: 1.4;
+  }
+
+  .final-flower {
+    width: 40px;
+    height: 40px;
+    margin: 5vh 0;
+  }
+
+  .final-back-to-top {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .final-back-to-top-label {
+    font-size: clamp(12px, 3.5vw, 16px);
+  }
+
+  /* ---- System dialog ---- */
+  .system-dialog {
+    width: 90vw;
+  }
+}
+
+/* ========================================
+   Responsive — Small Mobile (≤ 480px)
+   ======================================== */
+
+@media (max-width: 480px) {
+
+  /* ---- Connect form: stack role tiles ---- */
+  .connect-role-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .connect-role-tile {
+    padding: 22px 16px;
+  }
+
+  .connect-btn-row {
+    margin-top: 36px;
+  }
+
+  .connect-form-shell {
+    padding: 36px 16px 32px;
+  }
+
+  .connect-question {
+    font-size: 1.3rem;
+    margin-bottom: 28px;
+  }
+
+  .connect-input {
+    padding: 14px 16px;
+    font-size: 1rem;
+  }
+
+  .connect-side-arrow {
+    left: 8px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .connect-side-arrow-fwd {
+    right: 8px;
+    width: 38px;
+    height: 38px;
+  }
+
+  /* ---- Desktop ---- */
+  .screen-desktop {
+    padding: 1vh 1vw;
+  }
+
+  .desktop-window {
+    border-radius: 8px;
+  }
+
+  .desktop-icon img {
+    width: 18vw;
+    height: 18vw;
+  }
+
+  .desktop-icon span {
+    font-size: 10px;
+  }
+}

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Connect — Newfoundation</title>
+    <meta name="description" content="Get in touch with Newfoundation.">
+    <style>
+        /* ========================================
+           Fonts
+           ======================================== */
+
+        @font-face {
+            font-family: 'NewfoundationWhyte';
+            src: url('../fonts/NewfoundationWhyte/Book/NewfoundationWhyte-Book.woff2') format('woff2'),
+                url('../fonts/NewfoundationWhyte/Book/NewfoundationWhyte-Book.woff') format('woff'),
+                url('../fonts/NewfoundationWhyte/Book/NewfoundationWhyte-Book.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* ========================================
+           Reset & Base
+           ======================================== */
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: #ffffff;
+            color: #000000;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        /* ========================================
+           Form Shell
+           ======================================== */
+
+        .form-shell {
+            width: 100%;
+            max-width: 580px;
+            padding: 72px 48px 60px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========================================
+           Progress Dots — clickable nav
+           ======================================== */
+
+        .progress-dots {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 72px;
+            transition: opacity 0.7s ease;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d8d8d8;
+            border: none;
+            padding: 0;
+            cursor: default;
+            outline: none;
+            transition: background 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .progress-dot.active {
+            background: #000000;
+            transform: scale(1.3);
+        }
+
+        .progress-dot.completed {
+            background: #888;
+            cursor: pointer;
+        }
+
+        .progress-dot.completed:hover {
+            background: #555;
+            transform: scale(1.2);
+        }
+
+        /* ========================================
+           Steps
+           ======================================== */
+
+        .steps-viewport {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .step {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(36px);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            will-change: transform, opacity;
+        }
+
+        .step.entering {
+            transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        .step.exit-up {
+            opacity: 0;
+            transform: translateY(-28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1;
+        }
+
+        .step.exit-down {
+            opacity: 0;
+            transform: translateY(36px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1;
+        }
+
+        /* ========================================
+           Typography
+           ======================================== */
+
+        .step-question {
+            font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+            font-weight: 400;
+            font-size: 1.85rem;
+            letter-spacing: -0.01em;
+            line-height: 1.28;
+            color: #000;
+            margin-bottom: 48px;
+        }
+
+        /* ========================================
+           Inputs — macOS 2010 System Style
+           ======================================== */
+
+        .text-input {
+            width: 100%;
+            padding: 18px 22px;
+            font-size: 1.15rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            color: #000;
+            background: #fff;
+            border: 1px solid #c8c8c8;
+            border-radius: 8px;
+            outline: none;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+            transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .text-input::placeholder {
+            color: #b0b0b0;
+        }
+
+        .text-input:focus {
+            border-color: #5b9bd5;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06),
+                0 0 0 3px rgba(91, 155, 213, 0.2);
+        }
+
+        /* ========================================
+           Role Tiles
+           ======================================== */
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .role-tile {
+            padding: 32px 20px;
+            border: 1px solid #d4d4d4;
+            border-radius: 10px;
+            background: #fafafa;
+            cursor: pointer;
+            text-align: center;
+            font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #333;
+            user-select: none;
+            transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .role-tile:hover {
+            border-color: #aaa;
+            background: #f2f2f2;
+        }
+
+        .role-tile:active {
+            transform: scale(0.97);
+        }
+
+        .role-tile.selected {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ========================================
+           Buttons
+           ======================================== */
+
+        .btn-row {
+            display: flex;
+            gap: 14px;
+            margin-top: 48px;
+        }
+
+        .btn {
+            padding: 17px 40px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            font-size: 1.0rem;
+            font-weight: 500;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #222;
+        }
+
+        .btn-primary:disabled {
+            background: #e0e0e0;
+            color: #aaa;
+            cursor: default;
+            transform: none;
+        }
+
+        /* ========================================
+           Side Nav Arrow
+           ======================================== */
+
+        .side-arrow {
+            position: fixed;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 50%;
+            color: #bbb;
+            font-size: 1.6rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .side-arrow.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-arrow:hover {
+            color: #333;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .side-arrow:active {
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .side-arrow svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        @media (max-width: 720px) {
+            .side-arrow {
+                left: 8px;
+                top: auto;
+                bottom: 80px;
+                transform: none;
+                width: 48px;
+                height: 48px;
+            }
+
+            .side-arrow:active {
+                transform: scale(0.9);
+            }
+        }
+
+        /* ========================================
+           Thank You
+           ======================================== */
+
+        .thank-you {
+            text-align: center;
+            padding: 56px 0;
+        }
+
+        .thank-you-check {
+            width: 52px;
+            height: 52px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s,
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+        }
+
+        .thank-you-check svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .step.active .thank-you-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .thank-you h2 {
+            font-family: 'NewfoundationWhyte', -apple-system, sans-serif;
+            font-weight: 400;
+            font-size: 1.65rem;
+            color: #000;
+            margin-bottom: 14px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s;
+        }
+
+        .step.active .thank-you h2 {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .thank-you p {
+            font-size: 1.05rem;
+            color: #888;
+            line-height: 1.5;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
+        }
+
+        .step.active .thank-you p {
+            opacity: 1;
+        }
+
+        /* Restart link inside thank you */
+        .restart-link {
+            display: inline-block;
+            margin-top: 32px;
+            font-size: 0.85rem;
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s,
+                color 0.3s ease;
+        }
+
+        .step.active .restart-link {
+            opacity: 1;
+        }
+
+        .restart-link:hover {
+            color: #555;
+        }
+
+        /* ========================================
+           Back Link
+           ======================================== */
+
+        .back-link {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            font-size: 0.8rem;
+            color: #c0c0c0;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.4s ease;
+        }
+
+        .back-link:hover {
+            color: #666;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+
+        @media (max-height: 600px) {
+            .form-shell {
+                padding-top: 40px;
+            }
+
+            .progress-dots {
+                margin-bottom: 40px;
+            }
+
+            .step-question {
+                font-size: 1.5rem;
+                margin-bottom: 32px;
+            }
+
+            .steps-viewport {
+                min-height: 300px;
+            }
+        }
+
+        @media (min-width: 520px) {
+            .form-shell {
+                padding: 88px 60px 72px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-shell">
+
+        <!-- Progress Dots — clickable for completed steps -->
+        <div class="progress-dots" id="progressDots">
+            <button class="progress-dot active" data-dot="0" aria-label="Step 1"></button>
+            <button class="progress-dot" data-dot="1" aria-label="Step 2"></button>
+            <button class="progress-dot" data-dot="2" aria-label="Step 3"></button>
+        </div>
+
+        <!-- Steps -->
+        <div class="steps-viewport">
+
+            <!-- Step 0: Name -->
+            <div class="step active" data-step="0">
+                <div class="step-question">What is your name?</div>
+                <input type="text" class="text-input" id="inputName" placeholder="Full name" autocomplete="name"
+                    autofocus>
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="btnNext0" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 1: Role -->
+            <div class="step" data-step="1">
+                <div class="step-question">What describes you best?</div>
+                <div class="role-grid">
+                    <div class="role-tile" data-role="Researcher">Researcher</div>
+                    <div class="role-tile" data-role="Engineer">Engineer</div>
+                    <div class="role-tile" data-role="Investor">Investor</div>
+                    <div class="role-tile" data-role="Infrastructure">Infrastructure</div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="btnNext1" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Referral -->
+            <div class="step" data-step="2">
+                <div class="step-question">Who referred you?</div>
+                <input type="text" class="text-input" id="inputReferral" placeholder="Name or handle"
+                    autocomplete="off">
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="btnSubmit">Submit</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Thank You -->
+            <div class="step" data-step="3">
+                <div class="thank-you">
+                    <div class="thank-you-check">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h2>Thank you</h2>
+                    <p>We'll be in touch soon.</p>
+                    <a class="restart-link" id="restartLink">Start over</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Side arrow for going back -->
+    <button class="side-arrow" id="sideArrow" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
+    <a href="../index.html" class="back-link">← Back to desktop</a>
+
+    <script>
+        (() => {
+            'use strict';
+
+            const STORAGE_KEY = 'nf_connect_form';
+            const TOTAL_STEPS = 3; // 0, 1, 2 (step 3 is thank you)
+
+            // ---- DOM ----
+            const steps = document.querySelectorAll('.step');
+            const dots = document.querySelectorAll('.progress-dot');
+            const inputName = document.getElementById('inputName');
+            const inputReferral = document.getElementById('inputReferral');
+            const btnNext0 = document.getElementById('btnNext0');
+            const btnNext1 = document.getElementById('btnNext1');
+            const btnSubmit = document.getElementById('btnSubmit');
+            const roleTiles = document.querySelectorAll('.role-tile');
+            const progressDots = document.getElementById('progressDots');
+            const restartLink = document.getElementById('restartLink');
+            const sideArrow = document.getElementById('sideArrow');
+
+            // ---- State ----
+            let currentStep = 0;
+            let highestReached = 0; // for dot navigation
+            const selectedRoles = new Set();
+
+            // ---- LocalStorage ----
+            function saveState() {
+                const data = {
+                    step: currentStep,
+                    highestReached: highestReached,
+                    name: inputName.value,
+                    roles: Array.from(selectedRoles),
+                    referral: inputReferral.value,
+                    submitted: currentStep === 3
+                };
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                } catch (e) { /* silent */ }
+            }
+
+            function loadState() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return null;
+                    return JSON.parse(raw);
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function clearState() {
+                try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* silent */ }
+            }
+
+            // ---- Restore saved state ----
+            function restore() {
+                const saved = loadState();
+                if (!saved) return;
+
+                // Restore name
+                if (saved.name) {
+                    inputName.value = saved.name;
+                    btnNext0.disabled = false;
+                }
+
+                // Restore roles
+                if (saved.roles && saved.roles.length) {
+                    saved.roles.forEach(role => {
+                        selectedRoles.add(role);
+                        const tile = document.querySelector(`.role-tile[data-role="${role}"]`);
+                        if (tile) tile.classList.add('selected');
+                    });
+                    btnNext1.disabled = false;
+                }
+
+                // Restore referral
+                if (saved.referral) {
+                    inputReferral.value = saved.referral;
+                }
+
+                // Restore highest reached
+                highestReached = saved.highestReached || 0;
+
+                // If submitted, show thank you
+                if (saved.submitted) {
+                    jumpTo(3, true);
+                } else if (saved.step > 0 && saved.step < 3) {
+                    jumpTo(saved.step, true);
+                }
+            }
+
+            // ---- Navigation (animated) ----
+            function goTo(target) {
+                if (target === currentStep) return;
+                const direction = target > currentStep ? 'forward' : 'back';
+
+                // Mark current step exit
+                const prev = currentStep;
+                steps[prev].classList.remove('active', 'entering');
+                steps[prev].classList.add(direction === 'forward' ? 'exit-up' : 'exit-down');
+
+                // Prepare target — set initial offscreen position instantly
+                steps[target].classList.remove('active', 'exit-up', 'exit-down', 'entering');
+                steps[target].style.opacity = '0';
+                steps[target].style.transform = direction === 'forward' ? 'translateY(36px)' : 'translateY(-28px)';
+
+                // Force reflow
+                void steps[target].offsetHeight;
+
+                // Now enable transitions and go active
+                steps[target].classList.add('entering', 'active');
+                steps[target].style.opacity = '';
+                steps[target].style.transform = '';
+
+                currentStep = target;
+                if (target > highestReached && target < 3) {
+                    highestReached = target;
+                }
+
+                updateDots();
+                updateSideArrow();
+                saveState();
+
+                // Focus inputs
+                if (target === 0) setTimeout(() => inputName.focus(), 500);
+                if (target === 2) setTimeout(() => inputReferral.focus(), 500);
+
+                // Clean up prev exit class
+                setTimeout(() => {
+                    steps[prev].classList.remove('exit-up', 'exit-down');
+                }, 750);
+            }
+
+            // ---- Jump without animation (for restore) ----
+            function jumpTo(target, instant) {
+                steps[currentStep].classList.remove('active', 'entering', 'exit-up', 'exit-down');
+                steps[currentStep].style.opacity = '';
+                steps[currentStep].style.transform = '';
+
+                currentStep = target;
+                if (target > highestReached && target < 3) {
+                    highestReached = target;
+                }
+
+                steps[target].classList.remove('exit-up', 'exit-down', 'entering');
+                if (instant) {
+                    // No transition
+                    steps[target].style.transition = 'none';
+                    steps[target].classList.add('active');
+                    steps[target].style.opacity = '';
+                    steps[target].style.transform = '';
+                    void steps[target].offsetHeight;
+                    steps[target].style.transition = '';
+                } else {
+                    steps[target].classList.add('entering', 'active');
+                    steps[target].style.opacity = '';
+                    steps[target].style.transform = '';
+                }
+
+                updateDots();
+                updateSideArrow();
+
+                if (target === 3) {
+                    progressDots.style.opacity = '0';
+                }
+            }
+
+            // ---- Dots ----
+            function updateDots() {
+                dots.forEach((dot, i) => {
+                    dot.classList.remove('active', 'completed');
+                    if (i === currentStep && currentStep < 3) {
+                        dot.classList.add('active');
+                    } else if (i < currentStep || i <= highestReached) {
+                        dot.classList.add('completed');
+                    }
+                });
+
+                if (currentStep === 3) {
+                    progressDots.style.opacity = '0';
+                } else {
+                    progressDots.style.opacity = '1';
+                }
+            }
+
+            // ---- Side Arrow ----
+            function updateSideArrow() {
+                if (currentStep > 0 && currentStep < 3) {
+                    sideArrow.classList.add('visible');
+                } else {
+                    sideArrow.classList.remove('visible');
+                }
+            }
+
+            sideArrow.addEventListener('click', () => {
+                if (currentStep > 0 && currentStep < 3) {
+                    goTo(currentStep - 1);
+                }
+            });
+
+            // ---- Dot click navigation ----
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const target = parseInt(dot.dataset.dot, 10);
+                    // Can only navigate to completed steps or current
+                    if (target <= highestReached && target !== currentStep && currentStep < 3) {
+                        goTo(target);
+                    }
+                });
+            });
+
+            // ---- Step 0: Name ----
+            inputName.addEventListener('input', () => {
+                btnNext0.disabled = inputName.value.trim().length === 0;
+                saveState();
+            });
+
+            inputName.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && inputName.value.trim().length > 0) goTo(1);
+            });
+
+            btnNext0.addEventListener('click', () => goTo(1));
+
+            // ---- Step 1: Roles ----
+            roleTiles.forEach(tile => {
+                tile.addEventListener('click', () => {
+                    const role = tile.dataset.role;
+                    if (selectedRoles.has(role)) {
+                        selectedRoles.delete(role);
+                        tile.classList.remove('selected');
+                    } else {
+                        selectedRoles.add(role);
+                        tile.classList.add('selected');
+                    }
+                    btnNext1.disabled = selectedRoles.size === 0;
+                    saveState();
+                });
+            });
+
+            btnNext1.addEventListener('click', () => goTo(2));
+
+            // ---- Step 2: Referral ----
+            inputReferral.addEventListener('input', () => saveState());
+
+            inputReferral.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleSubmit();
+            });
+
+            btnSubmit.addEventListener('click', handleSubmit);
+
+            function handleSubmit() {
+                const data = {
+                    name: inputName.value.trim(),
+                    roles: Array.from(selectedRoles),
+                    referral: inputReferral.value.trim()
+                };
+                console.log('Connect form submission:', data);
+                goTo(3);
+            }
+
+            // ---- Restart ----
+            restartLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                clearState();
+                inputName.value = '';
+                inputReferral.value = '';
+                selectedRoles.clear();
+                roleTiles.forEach(t => t.classList.remove('selected'));
+                btnNext0.disabled = true;
+                btnNext1.disabled = true;
+                highestReached = 0;
+                jumpTo(0, false);
+                setTimeout(() => inputName.focus(), 100);
+            });
+
+            // ---- Init ----
+            restore();
+
+        })();
+    </script>
+
+</body>
+
+</html>
