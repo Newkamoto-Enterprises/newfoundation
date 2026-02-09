@@ -354,6 +354,11 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+.connect-panel-inner.connect-intro-mode {
+  justify-content: flex-start;
+  padding-top: clamp(60px, 10vh, 120px);
+}
+
 .connect-form-shell {
   width: 100%;
   max-width: 580px;

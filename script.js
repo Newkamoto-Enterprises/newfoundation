@@ -954,8 +954,7 @@ document.addEventListener('DOMContentLoaded', () => {
         id: 'intro',
         isIntro: true,
         introHTML: `
-          <p><span class="brand-name">Newfoundation</span> collaborates with a network of founders, investors, academic institutions e.g. MIT, Cambridge, UCL, and compute providers. We connect researchers, developers, investors, and co-publish research.</p>
-          <p>Our team and network comes from Google Research, DeepMind, Ndea, Berkeley, Stanford, CSM, University of California, University of Oxford.</p>
+          <p><span class="brand-name">Newfoundation</span> collaborates with a network of founders, investors, academic institutions e.g. MIT, Cambridge, UCL, and compute providers. We connect researchers, developers, investors, and co-publish research. Our team and network comes from Google Research, DeepMind, Ndea, Berkeley, Stanford, CSM, University of California, University of Oxford.</p>
           <p>Areas of research: Agentic search in the space of programs/skills. Evolutionary optimization. Agentic reasoning and Interleaved Chain-of-Thought (CoT) with Tool Use, program/tool synthesis and multi-agent coordination with MARL architectures. AI Safety and Governance.</p>
         `,
         buttonText: "Let's connect"
@@ -1245,9 +1244,9 @@ document.addEventListener('DOMContentLoaded', () => {
           el.innerHTML = `
             <div class="connect-intro">
               <div class="connect-intro-text">${stepCfg.introHTML}</div>
-              <div class="connect-btn-row">
-                <button class="connect-btn connect-btn-primary" data-action="next">${stepCfg.buttonText || "Let's connect"}</button>
-              </div>
+            </div>
+            <div class="connect-btn-row">
+              <button class="connect-btn connect-btn-primary" data-action="next">${stepCfg.buttonText || "Let's connect"}</button>
             </div>`;
         } else {
           el.innerHTML = renderStepContent(stepCfg);
@@ -1284,7 +1283,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const padH = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
       const padV = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
       const maxW = Math.ceil(panel.clientWidth - padH);
-      const maxH = Math.ceil(panel.clientHeight - padV - 80); // leave room for button
+      const maxH = Math.ceil(panel.clientHeight - padV - 120); // leave room for button + breathing space
 
       introText.style.transition = 'none';
 
@@ -1733,6 +1732,11 @@ document.addEventListener('DOMContentLoaded', () => {
         dotsContainer.style.opacity = '0';
       } else {
         dotsContainer.style.opacity = '1';
+      }
+      // Align panel from top on intro step so button stays on screen
+      const panel = document.querySelector('.connect-panel-inner');
+      if (panel) {
+        panel.classList.toggle('connect-intro-mode', !!(cfg && cfg.isIntro));
       }
       const dots = dotsContainer.querySelectorAll('.connect-dot');
       dots.forEach((dot, i) => {
