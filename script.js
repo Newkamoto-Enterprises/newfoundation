@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Apply a small safety margin to prevent sub-pixel overflow
-    best = best * 0.98;
+    best = best * 0.89;
     textFlow.style.fontSize = best + 'px';
 
     // Hide again — animation will reveal
@@ -420,10 +420,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return best;
     }
 
-    // --- Research cards: find min best size, apply uniformly ---
+    // --- Find best size for each card type independently ---
     const cards = document.querySelectorAll('.exploration-card');
-    const descRatio = 0.85;
+    const projCards = document.querySelectorAll('.exploration-project-card');
+    const descRatio = 0.92;
     let minResearchSize = Infinity;
+    let minProjSize = Infinity;
 
     cards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
@@ -433,35 +435,31 @@ document.addEventListener('DOMContentLoaded', () => {
       if (best < minResearchSize) minResearchSize = best;
     });
 
-    minResearchSize = minResearchSize * 0.93;
+    projCards.forEach(card => {
+      const title = card.querySelector('.exploration-card-title');
+      const desc = card.querySelector('.exploration-card-desc');
+      if (!title || !desc) return;
+      const best = findBestSize(card, title, desc, descRatio, 60);
+      if (best < minProjSize) minProjSize = best;
+    });
+
+    // Use the same size for both types — take the smaller of the two
+    const unifiedSize = Math.min(minResearchSize * 0.88, minProjSize * 0.95);
+
     cards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
       if (!title || !desc) return;
-      title.style.fontSize = minResearchSize + 'px';
-      desc.style.fontSize = (minResearchSize * descRatio) + 'px';
+      title.style.fontSize = unifiedSize + 'px';
+      desc.style.fontSize = (unifiedSize * descRatio) + 'px';
     });
-
-    // --- Project cards: find min best size, apply uniformly ---
-    const projCards = document.querySelectorAll('.exploration-project-card');
-    const projDescRatio = 0.82;
-    let minProjSize = Infinity;
 
     projCards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
       if (!title || !desc) return;
-      const best = findBestSize(card, title, desc, projDescRatio, 60);
-      if (best < minProjSize) minProjSize = best;
-    });
-
-    minProjSize = minProjSize * 0.90;
-    projCards.forEach(card => {
-      const title = card.querySelector('.exploration-card-title');
-      const desc = card.querySelector('.exploration-card-desc');
-      if (!title || !desc) return;
-      title.style.fontSize = minProjSize + 'px';
-      desc.style.fontSize = (minProjSize * projDescRatio) + 'px';
+      title.style.fontSize = unifiedSize + 'px';
+      desc.style.fontSize = (unifiedSize * descRatio) + 'px';
     });
   }
 
@@ -953,6 +951,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const STEPS_BEFORE_BRANCH = [
       {
+        id: 'intro',
+        isIntro: true,
+        introHTML: `
+          <p><span class="brand-name">Newfoundation</span> collaborates with a network of founders, investors, academic institutions e.g. MIT, Cambridge, UCL, and compute providers. We connect researchers, developers, investors, and co-publish research.</p>
+          <p>Our team and network comes from Google Research, DeepMind, Ndea, Berkeley, Stanford, CSM, University of California, University of Oxford.</p>
+          <p>Areas of research: Agentic search in the space of programs/skills. Evolutionary optimization. Agentic reasoning and Interleaved Chain-of-Thought (CoT) with Tool Use, program/tool synthesis and multi-agent coordination with MARL architectures. AI Safety and Governance.</p>
+        `,
+        buttonText: "Let's connect"
+      },
+      {
         id: 'identity1',
         question: 'About you',
         fields: [
@@ -1141,7 +1149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const STEPS_AFTER_BRANCH = [
       {
         id: 'cultural',
-        question: 'What do you think about crypto protocols?',
+        question: 'What do you think about open protocols?',
         fields: [
           {
             key: 'culturalFilter', type: 'choice', required: true, options: [
@@ -1209,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dotsContainer.innerHTML = '';
       stepElements = [];
 
-      const totalVisible = resolvedSteps.filter(s => !s.isFinal).length;
+      const totalVisible = resolvedSteps.filter(s => !s.isFinal && !s.isIntro).length;
 
       // Create dots
       for (let i = 0; i < totalVisible; i++) {
@@ -1233,6 +1241,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (stepCfg.isFinal) {
           el.innerHTML = renderThankYou();
+        } else if (stepCfg.isIntro) {
+          el.innerHTML = `
+            <div class="connect-intro">
+              <div class="connect-intro-text">${stepCfg.introHTML}</div>
+              <div class="connect-btn-row">
+                <button class="connect-btn connect-btn-primary" data-action="next">${stepCfg.buttonText || "Let's connect"}</button>
+              </div>
+            </div>`;
         } else {
           el.innerHTML = renderStepContent(stepCfg);
         }
@@ -1250,7 +1266,53 @@ document.addEventListener('DOMContentLoaded', () => {
       staggerFields(stepElements[currentIdx]);
       updateDots();
       updateSideArrow();
+
+      // Fit intro text to match about page sizing
+      fitIntroText();
     }
+
+    function fitIntroText() {
+      const introEl = viewport.querySelector('.connect-intro');
+      if (!introEl) return;
+      const introText = introEl.querySelector('.connect-intro-text');
+      if (!introText) return;
+
+      const panel = document.querySelector('.connect-panel-inner');
+      if (!panel) return;
+
+      const style = getComputedStyle(panel);
+      const padH = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+      const padV = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      const maxW = Math.ceil(panel.clientWidth - padH);
+      const maxH = Math.ceil(panel.clientHeight - padV - 80); // leave room for button
+
+      introText.style.transition = 'none';
+
+      let lo = 8, hi = 120, best = 16;
+
+      while (hi - lo > 0.5) {
+        const mid = (lo + hi) / 2;
+        introText.style.fontSize = mid + 'px';
+
+        if (introText.scrollWidth <= maxW && introText.scrollHeight <= maxH) {
+          best = mid;
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+
+      // Same scale factor as about page
+      best = best * 0.89;
+      introText.style.fontSize = best + 'px';
+
+      requestAnimationFrame(() => {
+        introText.style.transition = '';
+      });
+    }
+
+    // Re-fit intro on resize
+    window.addEventListener('resize', fitIntroText);
 
     function renderStepContent(cfg) {
       let html = '';
@@ -1527,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function validateCurrentStep() {
       const cfg = resolvedSteps[currentIdx];
-      if (!cfg || cfg.isFinal) return;
+      if (!cfg || cfg.isFinal || cfg.isIntro) return;
 
       const btn = stepElements[currentIdx].querySelector('[data-action="next"]');
       if (!btn) return;
@@ -1665,10 +1727,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
 
     function updateDots() {
+      const cfg = resolvedSteps[currentIdx];
+      // Hide dots on intro and final steps
+      if (cfg && (cfg.isIntro || cfg.isFinal)) {
+        dotsContainer.style.opacity = '0';
+      } else {
+        dotsContainer.style.opacity = '1';
+      }
       const dots = dotsContainer.querySelectorAll('.connect-dot');
       dots.forEach((dot, i) => {
         dot.classList.remove('active', 'completed');
-        if (i === currentIdx && !resolvedSteps[currentIdx].isFinal) {
+        if (i === currentIdx && !cfg.isFinal) {
           dot.classList.add('active');
         } else if (i < currentIdx || i <= highestReached) {
           dot.classList.add('completed');
@@ -1678,13 +1747,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateSideArrow() {
-      if (currentIdx > 0 && !resolvedSteps[currentIdx].isFinal) {
+      if (currentIdx > 0 && !resolvedSteps[currentIdx].isFinal && !resolvedSteps[currentIdx].isIntro) {
         sideArrow.classList.add('visible');
       } else {
         sideArrow.classList.remove('visible');
       }
       // Forward arrow: visible when there's a visited step ahead
-      if (currentIdx < highestReached && !resolvedSteps[currentIdx].isFinal) {
+      if (currentIdx < highestReached && !resolvedSteps[currentIdx].isFinal && !resolvedSteps[currentIdx].isIntro) {
         sideArrowFwd.classList.add('visible');
       } else {
         sideArrowFwd.classList.remove('visible');

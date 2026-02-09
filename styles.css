@@ -179,7 +179,7 @@ body {
 .explorations-inner {
   width: 100%;
   max-width: 100%;
-  padding: 20px;
+  padding: 11vh 7vw;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -195,14 +195,14 @@ body {
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  flex: 4;
+  flex: 3;
   min-height: 0;
 }
 
 .exploration-card {
   background: #fafafa;
   border-radius: clamp(10px, 1.2vw, 16px);
-  padding: 28px;
+  padding: 36px;
   border: none;
   opacity: 0;
   transform: translateY(15px);
@@ -220,7 +220,7 @@ body {
   font-size: clamp(1.1rem, 1.2vw + 0.5rem, 2rem);
   letter-spacing: -0.01em;
   color: #000000;
-  margin: 0 0 clamp(2px, 0.4vh, 8px);
+  margin: 0 0 clamp(1px, 0.2vh, 4px);
 }
 
 .exploration-card-desc {
@@ -237,7 +237,7 @@ body {
   display: flex;
   gap: 20px;
   width: 100%;
-  flex: 1;
+  flex: 1.5;
   min-height: 0;
 }
 
@@ -251,13 +251,21 @@ body {
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   justify-content: flex-start;
   opacity: 0;
   transform: translateY(15px);
   transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
   overflow: hidden;
+}
+
+.exploration-project-url {
+  margin-top: auto;
+  font-family: 'NewfoundationWhyte', sans-serif;
+  font-size: 9px;
+  color: #aaaaaa;
+  letter-spacing: 0.02em;
 }
 
 .exploration-project-card:hover {
@@ -679,6 +687,35 @@ body {
 .connect-side-arrow svg {
   width: 24px;
   height: 24px;
+}
+
+/* Intro Screen */
+.connect-intro {
+  text-align: left;
+  width: 80vw;
+  max-width: 80vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.connect-intro-text {
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+
+.connect-intro-text p {
+  font-family: 'ITCGaramondLtNarrow', 'Garamond', 'Georgia', serif;
+  font-weight: 300;
+  font-size: inherit;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: #000000;
+  margin: 0 0 0.6em;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.connect-intro-text p:last-child {
+  margin-bottom: 0;
 }
 
 /* Thank You */
