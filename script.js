@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Research cards: find min best size, apply uniformly ---
     const cards = document.querySelectorAll('.exploration-card');
-    const descRatio = 0.75;
+    const descRatio = 0.85;
     let minResearchSize = Infinity;
 
     cards.forEach(card => {
@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (best < minResearchSize) minResearchSize = best;
     });
 
-    minResearchSize = minResearchSize * 0.97;
+    minResearchSize = minResearchSize * 0.93;
     cards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Project cards: find min best size, apply uniformly ---
     const projCards = document.querySelectorAll('.exploration-project-card');
-    const projDescRatio = 0.72;
+    const projDescRatio = 0.82;
     let minProjSize = Infinity;
 
     projCards.forEach(card => {
@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (best < minProjSize) minProjSize = best;
     });
 
-    minProjSize = minProjSize * 0.95;
+    minProjSize = minProjSize * 0.90;
     projCards.forEach(card => {
       const title = card.querySelector('.exploration-card-title');
       const desc = card.querySelector('.exploration-card-desc');
