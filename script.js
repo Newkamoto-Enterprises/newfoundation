@@ -744,6 +744,15 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollToConnectSection();
   });
 
+  // Connect logo → scroll back to home/desktop
+  const connectLogoLink = document.getElementById('connectLogoLink');
+  if (connectLogoLink) {
+    connectLogoLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      scrollToScreen(0);
+    });
+  }
+
   /* ========================================
      Connect Form — Scroll-in Animation
      (same style as Screen 2 text animation)
@@ -998,6 +1007,21 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
       },
       {
+        id: 'interests',
+        question: 'What are you interested in?',
+        fields: [
+          {
+            key: 'interests', type: 'choice-multi', required: true, options: [
+              "Grants / Funding",
+              "Alignment Council",
+              "Networking",
+              "Research / Collaborations",
+              "Partnership"
+            ]
+          }
+        ]
+      },
+      {
         id: 'identity2',
         question: 'Main area',
         fields: [
@@ -1010,6 +1034,9 @@ document.addEventListener('DOMContentLoaded', () => {
         question: 'About you',
         fields: [
           { key: 'socialLinks', label: 'Links', type: 'multiText', required: true, placeholder: 'https://x.com/handle', maxFields: 3 },
+          { key: 'researchFocus', label: 'Research Focus', type: 'text', required: false, placeholder: 'e.g. Multi-agent systems, AI Safety, ZK Proofs' },
+          { key: 'achievements', label: 'Key Achievements / Benchmarks', type: 'textarea', required: false, placeholder: 'Notable breakthroughs, benchmarks, publications...' },
+          { key: 'grantsAwards', label: 'Previous Grants or Awards', type: 'text', required: false, placeholder: 'e.g. NSF Grant, Ethereum Foundation, Best Paper Award' },
           { key: 'bio', label: 'Short Bio', type: 'textarea', required: true, placeholder: '2-3 sentences about your background.' }
         ]
       },
@@ -1052,20 +1079,6 @@ document.addEventListener('DOMContentLoaded', () => {
           fields: [
             { key: 'portfolio', label: 'Work URLs', type: 'multiText', required: true, placeholder: 'Work URL', maxFields: 3 }
           ]
-        },
-        {
-          id: 'branch_builder_3',
-          question: 'What are you interested in?',
-          fields: [
-            {
-              key: 'interests', type: 'choice-multi', required: true, options: [
-                "Grants / Funding",
-                "Alignment Council",
-                "Networking",
-                "Research/Collaborations"
-              ]
-            }
-          ]
         }
       ],
       "I am a researcher": [
@@ -1088,20 +1101,6 @@ document.addEventListener('DOMContentLoaded', () => {
           question: 'Share your work',
           fields: [
             { key: 'publication', label: 'Work URLs', type: 'multiText', required: true, placeholder: 'Work URL', maxFields: 3 }
-          ]
-        },
-        {
-          id: 'branch_researcher_3',
-          question: 'What are you interested in?',
-          fields: [
-            {
-              key: 'interests', type: 'choice-multi', required: true, options: [
-                "Grants / Funding",
-                "Alignment Council",
-                "Networking",
-                "Research/Collaborations"
-              ]
-            }
           ]
         }
       ],
@@ -1126,20 +1125,6 @@ document.addEventListener('DOMContentLoaded', () => {
               ]
             }
           ]
-        },
-        {
-          id: 'branch_project_3',
-          question: 'What are you interested in?',
-          fields: [
-            {
-              key: 'interests', type: 'choice-multi', required: true, options: [
-                "Grants / Funding",
-                "Alignment Council",
-                "Networking",
-                "Research/Collaborations"
-              ]
-            }
-          ]
         }
       ],
       "Interested in the governance": [
@@ -1153,20 +1138,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 "Tokenomics & Policy",
                 "Community Building",
                 "Event Organizing"
-              ]
-            }
-          ]
-        },
-        {
-          id: 'branch_governance_2',
-          question: 'What are you interested in?',
-          fields: [
-            {
-              key: 'interests', type: 'choice-multi', required: true, options: [
-                "Grants / Funding",
-                "Alignment Council",
-                "Networking",
-                "Research/Collaborations"
               ]
             }
           ]
